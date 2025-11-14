@@ -1,1 +1,1 @@
-console.log("start of the backend project");
+console.log("start of an awesome project");
