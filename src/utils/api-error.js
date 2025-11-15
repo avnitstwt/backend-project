@@ -3,6 +3,8 @@ class Apierror extends Error{
         statusCode,
         message = "Something wen wrong",
         errors = [],
-        stack =""
-    )
+        stack ="",
+    ){
+        super( )
+    }
 }
