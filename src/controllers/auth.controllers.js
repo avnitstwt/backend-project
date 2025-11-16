@@ -24,7 +24,7 @@ const registerUser = asyncHandler(async (req,res)=>{
     const {email,username,password,role} = req.body
 
     const existedUser = await User.findOne({
-        $or:[{username},{email}]
+        $or:[{username},{email}],
     })
 
     if(existedUser){
@@ -39,14 +39,15 @@ const user = await User.create({
 
 const {unHashedToken, hashedToken,tokenExpiry} =  user.generateTemporaryToken()
 
-user.emailVerificationExpiry = hashedToken
+user.emailVerificationToken=hashedToken
 user.emailVerificationExpiry=tokenExpiry
 
 await user.save({validateBeforeSave:false})
 await sendEmail({
     email:user?.email,
     subject:"please verify your mail",
-    mailgenContent:emailVerificationMailgenContent(user.username,`${req.protocol}"//${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`),
+    mailgenContent:emailVerificationMailgenContent(user.username,
+        `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`),
 })
 
 await User.findById(user._id).select("-password -refreshToken -emailVerificationToken -emailVerificationExpiry",)
