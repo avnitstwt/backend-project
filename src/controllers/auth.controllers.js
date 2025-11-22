@@ -2,7 +2,7 @@ import { User } from "../models/user.models.js";
 import { Apierror } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
-import {emailVerificationMailgenContent, sendEmail} from "../utils/mail.js"
+import {emailVerificationMailgenContent,sendEmail} from "../utils/mail.js"
 
 const generateAccessAndRefreshTokens = async (userId)=>{
     try {
@@ -14,8 +14,7 @@ const generateAccessAndRefreshTokens = async (userId)=>{
         await user.save({validateBeforeSave:false})
         return {accessToken,refreshToken}
     } catch (error) {
-        throw new Apierror
-        900,"Something went wrong while generating access token"
+        throw new Apierror(500,"Something went wrong while generating access token")
     }}
 
 
@@ -50,7 +49,7 @@ await sendEmail({
         `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`),
 })
 
-await User.findById(user._id).select("-password -refreshToken -emailVerificationToken -emailVerificationExpiry",)
+const createdUser = await User.findById(user._id).select("-password -refreshToken -emailVerificationToken -emailVerificationExpiry",)
 
 if(!createdUser){
     throw new Apierror(500,"Something went wrong while registering a user")

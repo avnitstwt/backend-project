@@ -6,13 +6,13 @@ const sendEmail = async (options)=>{
         theme:"default",
         product:{
             name:"Task Manager",
-            link:"https:taskmanagelink.com"
+            link:"https://taskmanagelink.com"
 
         }
     })
 
     const emailTextual = mailGenerator.generatePlaintext(options.mailgenContent)
-    const emailHTML = mailGenerator.generatePlaintext(options.mailgenContent)
+    const emailHTML = mailGenerator.generate(options.mailgenContent)
 
     const transporter = nodemailer.createTransport({
         host:process.env.MAILTRAP_SMTP_HOST,
